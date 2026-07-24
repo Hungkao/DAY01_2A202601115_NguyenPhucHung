@@ -73,15 +73,6 @@ def call_openai_mini(
     top_p: float = 0.9,
     max_tokens: int = 256,
 ) -> tuple[str, float]:
-    """
-    Gọi API với model gpt-4o-mini — nhanh hơn và rẻ hơn.
-
-    Returns:
-        Tuple (response_text: str, latency_seconds: float).
-
-    Gợi ý:
-        Tái sử dụng call_openai() với model=OPENAI_MINI_MODEL — 1 dòng code.
-    """
     return call_openai(
         prompt=prompt,
         model=OPENAI_MINI_MODEL,
@@ -95,34 +86,20 @@ def call_openai_mini(
 # Task 1.3 — So sánh GPT-4o vs GPT-4o-mini
 # ---------------------------------------------------------------------------
 def compare_models(prompt: str) -> dict:
-    """
-    Gọi cả hai model với cùng một prompt và trả về dict so sánh.
-
-    Returns:
-        Dict với các key:
-            - "gpt4o_response":      str
-            - "mini_response":       str
-            - "gpt4o_latency":       float
-            - "mini_latency":        float
-            - "gpt4o_cost_estimate": float  (USD ước tính cho phản hồi)
-
-    Gợi ý:
-        cost = (len(response.split()) / 0.75) / 1000 \\
-               * PRICING_PER_1K_TOKENS["gpt-4o"]["output"]
-        (0.75 từ ≈ 1 token — ước lượng thô; Part 2 sẽ tính chính xác hơn)
-    """
     gpt4o_response, gpt4o_latency = call_openai(prompt)
     mini_response, mini_latency = call_openai_mini(prompt)
-
-    word_count = len(gpt4o_response.split())
-    cost_estimate = (word_count / 0.75) / 1000 * PRICING_PER_1K_TOKENS["gpt-4o"]["output"]
+    gpt4o_cost_estimate = (
+        (len(gpt4o_response.split()) / 0.75)
+        / 1000
+        * PRICING_PER_1K_TOKENS["gpt-4o"]["output"]
+    )
 
     return {
         "gpt4o_response": gpt4o_response,
         "mini_response": mini_response,
         "gpt4o_latency": gpt4o_latency,
         "mini_latency": mini_latency,
-        "gpt4o_cost_estimate": cost_estimate,
+        "gpt4o_cost_estimate": gpt4o_cost_estimate,
     }
 
 
